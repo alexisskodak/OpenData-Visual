@@ -1,4 +1,4 @@
-# dashelec
+# Open Data - Visual
 
 ## Project setup
 ```
