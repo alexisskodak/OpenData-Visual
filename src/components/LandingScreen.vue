@@ -8,14 +8,14 @@
             <v-row>
               <v-col>
 
-                <h1 class="text-h2 white--text">Données régionales</h1>
-                <h2 class="text-h4 white--text">Production et consommation d'électricité</h2>
+                <h1 class="text-h4 text-md-h2 white--text">Données régionales</h1>
+                <h2 class="text-h6 text-md-h4 white--text">Production et conso. d'électricité</h2>
 
               </v-col>
             </v-row>
 
             <div class="mt-5 mt-md-15">
-              <h3 class="text-h5 white--text">Soumettez le formulaire ci dessous pour démarrer</h3>
+              <h3 class="text-body-1 text-md-h5 white--text">Saisir un choix ci dessous pour démarrer</h3>
             </div>
 
             <v-row>
@@ -75,6 +75,7 @@ export default {
 </script>
 
 <style scoped>
+
 .landing-screen {
   height: 100vh;
   width: 100%;
