@@ -1,60 +1,61 @@
 <template>
-    <v-main app>
-      <v-container class="landing-screen px-0 py-0" fluid>
-        <div class="overlay">
+  <v-main app>
+    <v-container class="landing-screen px-0 py-0" fluid>
+      <div class="overlay">
 
-          <v-container class="py-10">
+        <v-container class="py-10">
 
-            <v-row>
-              <v-col>
+          <v-row>
+            <v-col>
 
-                <h1 class="text-h4 text-md-h2 white--text">Données régionales</h1>
-                <h2 class="text-h6 text-md-h4 white--text">Production et conso. d'électricité</h2>
+              <h1 class="text-h4 text-md-h2 white--text">Données régionales</h1>
+              <h2 class="text-h6 text-md-h4 white--text">Production et conso. d'électricité</h2>
 
-              </v-col>
-            </v-row>
+            </v-col>
+          </v-row>
 
-            <div class="mt-5 mt-md-15">
-              <h3 class="text-body-1 text-md-h5 white--text">Saisir un choix ci dessous pour démarrer</h3>
-            </div>
+          <div class="mt-5 mt-md-15">
+            <h3 class="text-body-1 text-md-h5 white--text">Saisir un choix ci dessous pour démarrer</h3>
+          </div>
 
-            <v-row>
+          <v-row>
 
-              <v-col cols="12" sm="4">
-                <v-select
-                    :items="years"
-                    v-model="yearInput"
-                    label="Choisir une année"
-                    solo
-                ></v-select>
-              </v-col>
+            <v-col cols="12" sm="4">
+              <v-select
+                  :items="years"
+                  v-model="yearInput"
+                  label="Choisir une année"
+                  solo
+              ></v-select>
+            </v-col>
 
-              <v-col cols="12" sm="4">
-                <v-select
-                    :items="regions"
-                    v-model="regionInput"
-                    label="Choisir une région"
-                    solo
-                ></v-select>
-              </v-col>
+            <v-col cols="12" sm="4">
+              <v-select
+                  :items="regions"
+                  v-model="regionInput"
+                  label="Choisir une région"
+                  solo
+              ></v-select>
+            </v-col>
 
-              <v-col cols="12" sm="4">
+            <v-col cols="12" sm="4">
+              <router-link :to="{ name: 'Yearly', params: { year: yearInput, region: regionInput } }">
                 <v-btn
                     color="primary"
                     depressed
                     large
-                    @click="$router.push({name: 'dashboard', query: { year: yearInput.toString(), region: regionInput } })"
                 >valider
                 </v-btn>
-              </v-col>
+              </router-link>
+            </v-col>
 
-            </v-row>
+          </v-row>
 
-          </v-container>
+        </v-container>
 
-        </div>
-      </v-container>
-    </v-main>
+      </div>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
