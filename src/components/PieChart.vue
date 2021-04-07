@@ -9,6 +9,9 @@ export default {
     labels: {
       type: Array
     },
+    colors: {
+      type: Array
+    },
     chartData: {
       type: Array
     },
@@ -22,9 +25,10 @@ export default {
             labels: this.labels,
             datasets: [{
               data: this.chartData,
+              borderWidth: 0,
               backgroundColor: [
-                "#1976d2",
-                "#ff006e",
+                this.colors[0],
+                this.colors[1],
               ]
             }]
           },
@@ -37,6 +41,10 @@ export default {
   },
   watch: {
     chartData: function () {
+      this.$data._chart.destroy()
+      this.renderPieChart()
+    },
+    colors: function () {
       this.$data._chart.destroy()
       this.renderPieChart()
     }

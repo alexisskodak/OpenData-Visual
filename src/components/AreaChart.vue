@@ -16,6 +16,9 @@ export default {
     },
     axesOptions: {
       type: Object
+    },
+    colors: {
+      type: Array
     }
   },
   methods: {
@@ -26,13 +29,13 @@ export default {
               {
                 data: this.chartData.histProdData,
                 backgroundColor: "rgba(0,0,0,0)",
-                borderColor: "#1976d2",
+                borderColor: this.colors[0],
                 yAxisID: this.axesOptions.ids[0] ?? null
               },
               {
                 data: this.chartData.histConsData,
                 backgroundColor: "rgba(0,0,0,0)",
-                borderColor: "#ff006e",
+                borderColor: this.colors[1],
                 yAxisID: this.axesOptions.ids[1] ?? null
               },
             ],

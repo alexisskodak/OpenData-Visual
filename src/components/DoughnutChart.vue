@@ -16,6 +16,9 @@ export default {
     },
     options: {
       type: Object,
+    },
+    colors: {
+      type: Array
     }
   },
   methods: {
@@ -24,12 +27,14 @@ export default {
             labels: this.labels,
             datasets: [{
               data: this.regionData,
+              borderWidth: 0,
               backgroundColor: [
-                "#1976d2",
-                "#ff006e",
-                "#8338ec",
-                "#fb5607",
-                "#ffbe0b",
+                this.colors[0],
+                this.colors[1],
+                this.colors[2],
+                this.colors[3],
+                this.colors[4],
+                this.colors[5],
               ]
             }]
           },
@@ -42,6 +47,10 @@ export default {
   },
   watch: {
     regionData: function () {
+      this.$data._chart.destroy()
+      this.renderDonutChart()
+    },
+    colors: function () {
       this.$data._chart.destroy()
       this.renderDonutChart()
     }
