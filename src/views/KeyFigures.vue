@@ -224,15 +224,9 @@ export default {
       },
       tooltips: {
         callbacks: {
-          title: function () {
-            return `Quantite en GWh`;
+          afterBody: function () {
+            return '(GWh)'
           },
-          afterLabel: function (tooltipItem, data) {
-            let dataset = data['datasets'][0]['data']
-            let total = dataset.reduce((a, b) => a + b)
-            let percent = dataset.map((a) => (a / total * 100).toFixed(0))
-            return `Soit ${percent[tooltipItem['index']]} %`
-          }
         }
       },
       responsive: true,
