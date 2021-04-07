@@ -25,7 +25,7 @@
     </v-container>
   </v-main>
 
-  <v-main app style="background-color: #F8F9FA" v-else>
+  <v-main app :style="$vuetify.theme.dark ? 'background-color: #121212' : 'background-color: #F8F9FA'" v-else>
 
     <v-container v-if="prodData">
       <p class="text-h5 mb-0">Données régionales d'énergie</p>
@@ -85,6 +85,7 @@
             <v-card-text>
               <PieChart :labels="['Production totale', 'Consommation']"
                         :chart-data="getPieData"
+                        :colors="getChartColors"
                         :options="pieOptions"
                         class="pie">
               </PieChart>
@@ -95,15 +96,39 @@
 
         <v-col cols="12" md="6">
           <v-card class="fill-height">
-            <v-card-title>Production par filière</v-card-title>
+            <v-card-title class="pb-0">Production par filière</v-card-title>
+            <v-tabs v-model="tab">
+              <v-tab>
+                <v-icon>mdi-chart-donut</v-icon>
+              </v-tab>
+              <v-tab>
+                <v-icon>mdi-chart-bar</v-icon>
+              </v-tab>
+            </v-tabs>
             <v-card-text>
-              <DoughnutChart
-                  class="donut"
-                  :labels="labels"
-                  :region-data="quantities"
-                  :percentages="getPercentages"
-                  :options="chartOptions">
-              </DoughnutChart>
+              <v-tabs-items v-model="tab">
+                <v-tab-item>
+                  <DoughnutChart
+                      class="donut"
+                      :labels="labels"
+                      :colors="getChartColors"
+                      :region-data="quantities"
+                      :percentages="getPercentages"
+                      :options="chartOptions">
+                  </DoughnutChart>
+                </v-tab-item>
+                <v-tab-item>
+                  <BarChart
+                      class="donut"
+                      :labels="labels"
+                      :colors="getChartColors"
+                      :region-data="quantities"
+                      :percentages="getPercentages"
+                      :options="barOptions"
+                  >
+                  </BarChart>
+                </v-tab-item>
+              </v-tabs-items>
             </v-card-text>
           </v-card>
 
@@ -130,10 +155,12 @@ import DoughnutChart from "@/components/DoughnutChart";
 import DataTable from "@/components/DataTable";
 import PieChart from "@/components/PieChart";
 import Footer from "@/components/Footer";
+import BarChart from "@/components/BarChart";
 
 export default {
   name: "KeyFigures",
   components: {
+    BarChart,
     AnimatedNumber,
     DoughnutChart,
     DataTable,
@@ -141,6 +168,7 @@ export default {
     Footer
   },
   data: () => ({
+    tab: null,
     sources: ['Nucleaire', 'Eolienne', 'Thermique', 'Hydraulique', 'Solaire', 'Bioenergies'],
     headers: [
       {text: 'Source', value: 'name', sortable: false, align: 'start'},
@@ -171,6 +199,46 @@ export default {
         }
       },
     },
+    barOptions: {
+
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          gridLines: {
+            display: true
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          gridLines: {
+            display: true
+          }
+        }]
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        callbacks: {
+          title: function () {
+            return `Quantite en GWh`;
+          },
+          afterLabel: function (tooltipItem, data) {
+            let dataset = data['datasets'][0]['data']
+            let total = dataset.reduce((a, b) => a + b)
+            let percent = dataset.map((a) => (a / total * 100).toFixed(0))
+            return `Soit ${percent[tooltipItem['index']]} %`
+          }
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      height: 200
+    },
     chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
@@ -179,8 +247,9 @@ export default {
         animateScale: true
       },
       legend: {
+        position: 'left',
         labels: {
-          boxWidth: 15
+          boxWidth: 15,
         }
       },
       tooltips: {
@@ -204,6 +273,11 @@ export default {
     this.fetchData()
   },
   computed: {
+    getChartColors: function () {
+      const darkPalete = ["#80b3db", "#f48fb1", "#8c5ed3", "#ea7941", "#f4ca55", "#C5E1A5"];
+      const lightPalette = ["#1976d2", "#ff006e", "#8338ec", "#fb5607", "#ffbe0b", "#7CB342"];
+      return this.$vuetify.theme.dark ? darkPalete : lightPalette
+    },
     getPieData: function () {
       return [this.total.toFixed(2), (this.consData['consoNette']).toFixed(2)]
     },

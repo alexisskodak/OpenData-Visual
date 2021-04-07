@@ -16,7 +16,7 @@
     </v-container>
   </v-main>
 
-  <v-main app style="background-color: #F8F9FA" v-else>
+  <v-main app :style="$vuetify.theme.dark ? 'background-color: #121212' : 'background-color: #F8F9FA' " v-else>
 
     <v-container v-if="histConsData">
 
@@ -26,7 +26,7 @@
           <p class="body-2">Période 2008 - 2019</p>
           <v-card>
             <v-card-title>
-              Evolution production / consommation
+              Evolution <span class="primary--text mx-2">production</span> / <span class="secondary--text mx-2">conso.</span>
             </v-card-title>
             <v-card-subtitle>
               <v-switch :label="`Échelle: ${scale.name}`" class="mt-0" v-model="scaleSwitch"></v-switch>
@@ -36,6 +36,7 @@
               <AreaChart
                   :chart-data="{histProdData, histConsData}"
                   :labels="years"
+                  :colors="getChartColors"
                   :axes-options="axes"
                   :options="lineOptions">
               </AreaChart>
@@ -90,7 +91,7 @@ export default {
             //needed to change the scientific notation results from using logarithmic scale
             callback: function (value) {
               //pass tick values as a string into Number function
-              return `${(Number(value)).toLocaleString('fr')} GWh`;
+              return `${(Number(value)).toFixed(0)}`;
             }
           },
         }]
@@ -100,6 +101,13 @@ export default {
   mounted() {
     this.region = this.$route.params.region
     this.fetchData()
+  },
+  computed: {
+    getChartColors: function () {
+      const darkPalete = ["#80b3db", "#f48fb1"];
+      const lightPalette = ["#1976d2", "#ff006e"];
+      return this.$vuetify.theme.dark ? darkPalete : lightPalette
+    },
   },
   watch: {
     /**
@@ -138,17 +146,17 @@ export default {
           position: 'right',
           type: 'linear',
           ticks: {
-            fontColor: '#ff006e',
+            fontColor: this.getChartColors[1],
             min: 0,
             callback: function (value) {//needed to change the scientific notation results from using logarithmic scale
-              return `${(Number(value)).toLocaleString('fr')} GWh`;//pass tick values as a string into Number function
+              return `${(Number(value)).toFixed(0)}`;//pass tick values as a string into Number function
             }
           }
         }
         this.lineOptions.scales.yAxes.push(this.axes.options)
         this.lineOptions.scales.yAxes[0].id = 'left-y-axis'
         this.lineOptions.scales.yAxes[0].position = 'left'
-        this.lineOptions.scales.yAxes[0].ticks.fontColor = '#1976d2'
+        this.lineOptions.scales.yAxes[0].ticks.fontColor = this.getChartColors[0]
       } else {
         this.axes.name = 'simple'
         this.axes.ids = [null, null]
