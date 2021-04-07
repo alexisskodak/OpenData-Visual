@@ -1,10 +1,52 @@
-<template>
-$END$
-</template>
-
 <script>
+import {Bar} from 'vue-chartjs/dist/vue-chartjs'
 export default {
-name: "BarChart"
+  name: "BarChart",
+  extends: Bar,
+  props: {
+    labels: {
+      type: Array,
+    },
+    regionData: {
+      type: Array,
+    },
+    percentages: {
+      type: Array
+    },
+    options: {
+      type: Object,
+    },
+    colors: {
+      type: Array
+    }
+  },
+  methods: {
+    renderBarChart: function () {
+      this.renderChart({
+            labels: this.labels,
+            datasets: [{
+              data: this.regionData,
+              backgroundColor: this.colors[0]
+            }]
+          },
+          this.options
+      );
+    }
+  },
+  mounted() {
+    console.log(this.regionData)
+    this.renderBarChart()
+  },
+  watch: {
+    regionData: function () {
+      this.$data._chart.destroy()
+      this.renderBarChart()
+    },
+    colors: function () {
+      this.$data._chart.destroy()
+      this.renderBarChart()
+    }
+  }
 }
 </script>
 
