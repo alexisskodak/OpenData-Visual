@@ -14,16 +14,16 @@ const routes = [
     component: Home
   },
   {
-    path: '/dashboard/:year/:region/', name: 'dashboard', component: Dashboard,
+    path: '/dashboard/', name: 'dashboard', component: Dashboard,
     children: [
       {
-        path: '',
+        path: 'yearly/:year/:region/',
         name: 'Yearly',
         component: KeyFigures
       },
       {
-        path: 'regional',
-        name: 'Regional',
+        path: 'overview',
+        name: 'Overview',
         component: OverviewGraph
       },
     ]

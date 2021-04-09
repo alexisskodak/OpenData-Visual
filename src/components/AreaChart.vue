@@ -1,5 +1,5 @@
 <script>
-import { Line } from 'vue-chartjs/dist/vue-chartjs'
+import {Line} from 'vue-chartjs/dist/vue-chartjs'
 
 export default {
   extends: Line,
@@ -28,13 +28,16 @@ export default {
             datasets: [
               {
                 data: this.chartData.histProdData,
-                backgroundColor: "rgba(0,0,0,0)",
+                //backgroundColor: "#80b3db",
+                backgroundColor: "rgb(128,179,219, 0.3)",
+                fill: '+1',
                 borderColor: this.colors[0],
                 yAxisID: this.axesOptions.ids[0] ?? null
               },
               {
                 data: this.chartData.histConsData,
                 backgroundColor: "rgba(0,0,0,0)",
+                fill: {value: 2},
                 borderColor: this.colors[1],
                 yAxisID: this.axesOptions.ids[1] ?? null
               },
@@ -44,6 +47,9 @@ export default {
     }
   },
   mounted() {
+    this.addPlugin({
+      id: "filler"
+    })
     this.renderLineChart()
   },
   watch: {

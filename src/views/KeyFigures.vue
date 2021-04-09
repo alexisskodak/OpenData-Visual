@@ -69,8 +69,8 @@
                   <p class="text--primary">
                     Soit
                     <span :class="`font-weight-bold ${this.getRatioClass}`">
-                   {{ this.getConsProdRatio() }}x
-                  </span> le total de production de la région
+                   {{ this.getConsProdRatio() }} fois
+                  </span> la production
                   </p>
                 </v-card-text>
               </v-card>
@@ -207,7 +207,8 @@ export default {
             beginAtZero: true
           },
           gridLines: {
-            display: true
+            display: true,
+            color: "rgba(87, 87, 87, 0.3)"
           }
         }],
         xAxes: [{
@@ -215,7 +216,8 @@ export default {
             beginAtZero: true
           },
           gridLines: {
-            display: true
+            display: true,
+            color: "rgba(87, 87, 87, 0.3)"
           }
         }]
       },

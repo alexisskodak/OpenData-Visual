@@ -19,7 +19,7 @@
         <v-tabs-slider color="pink"></v-tabs-slider>
 
         <v-tab :to="{ name: 'Yearly' }" dark>Chiffres clés</v-tab>
-        <v-tab :to="{ path: 'regional' }" dark>Vue d'ensemble</v-tab>
+        <v-tab :to="{ name: 'Overview' }" dark>Vue d'ensemble</v-tab>
 
       </v-tabs>
     </template>

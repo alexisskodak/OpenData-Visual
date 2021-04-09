@@ -26,7 +26,8 @@
           <p class="body-2">Période 2008 - 2019</p>
           <v-card>
             <v-card-title>
-              Evolution <span class="primary--text mx-2">production</span> / <span class="secondary--text mx-2">conso.</span>
+              Evolution <span class="primary--text mx-2">production</span> / <span
+                class="secondary--text mx-2">conso.</span>
             </v-card-title>
             <v-card-subtitle>
               <v-switch :label="`Échelle: ${scale.name}`" class="mt-0" v-model="scaleSwitch"></v-switch>
@@ -86,6 +87,10 @@ export default {
       scales: {
         yAxes: [{
           type: 'linear',
+          gridLines: {
+            display: true,
+            color: "rgba(87, 87, 87, 0.3)"
+          },
           ticks: {
             min: 0,
             //needed to change the scientific notation results from using logarithmic scale
@@ -93,6 +98,12 @@ export default {
               //pass tick values as a string into Number function
               return `${(Number(value)).toFixed(0)}`;
             }
+          },
+        }],
+        xAxes: [{
+          gridLines: {
+            display: true,
+            color: "rgba(87, 87, 87, 0.3)"
           },
         }]
       }
@@ -177,6 +188,7 @@ export default {
         const responses = await Promise.all([
           fetch(`${baseUrl}/production/historical/${regionId}`),
           fetch(`${baseUrl}/consumption/historical/${regionId}`),
+          fetch(`${baseUrl}/emission/`),
         ])
         const data = await Promise.all(
             responses.map(async (res) => res.json())
