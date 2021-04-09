@@ -22,7 +22,7 @@ const routes = [
         component: KeyFigures
       },
       {
-        path: 'overview',
+        path: 'overview/:region/',
         name: 'Overview',
         component: OverviewGraph
       },

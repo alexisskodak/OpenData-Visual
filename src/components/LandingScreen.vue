@@ -44,6 +44,7 @@
                     color="primary"
                     depressed
                     large
+                    @click="publishParamsToStore(yearInput, regionInput)"
                 >valider
                 </v-btn>
               </router-link>
@@ -70,6 +71,12 @@ export default {
     return {
       regionInput: '',
       yearInput: 0,
+    }
+  },
+  methods: {
+    publishParamsToStore(y, r) {
+      this.$store.commit('updateYear', y)
+      this.$store.commit('updateRegion', r)
     }
   }
 }
