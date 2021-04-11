@@ -11,11 +11,13 @@ export default new Vuetify({
                 primary: colors.blue.darken4,
                 secondary: colors.pink.base,
                 accent: colors.indigo.base,
+                error: colors.red.darken4
             },
             dark: {
                 primary: colors.blue.lighten3,
                 secondary: colors.pink.lighten3,
                 accent: colors.indigo.base,
+                error: colors.red.lighten1
             },
         },
     },

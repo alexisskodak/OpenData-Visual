@@ -32,53 +32,102 @@
       <p class="body-2">Région {{ region }}, {{ year }}</p>
 
       <v-row>
-        <v-col cols="12" md="6" sm="4">
-          <v-row>
-            <v-col>
-              <v-card>
-                <v-card-subtitle class="text-overline pb-0">Production {{ year }}</v-card-subtitle>
-                <v-card-title class="pt-0">
-                  <animated-number :value="total" :formatValue="getFormattedTotal"
-                                   :duration="1000"></animated-number>
-                  <p class="mb-0 ml-1">GWh</p>
-                </v-card-title>
-                <v-card-text>
-                  <p class="mb-0 text--primary">
-                    <span class="font-weight-bold">{{ getTopPercentage().quantity }} GWh</span> d'énergie
-                    {{ getTopPercentage().name }}
-                  </p>
-                  <p class="text--primary">
-                    <span class="font-weight-bold primary--text">{{ getTopPercentage().percent }} %</span>
-                    du total de la région
-                  </p>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
 
-          <v-row>
-            <v-col>
-              <v-card>
-                <v-card-subtitle class="text-overline pb-0">Consommation {{ year }}</v-card-subtitle>
-                <v-card-title class="pt-0">
-                  <animated-number :value="consData['consoNette']" :formatValue="getFormattedTotal"
-                                   :duration="1000"></animated-number>
-                  <p class="mb-0 ml-1">GWh</p>
-                </v-card-title>
-                <v-card-text>
-                  <p class="text--primary">
-                    Soit
-                    <span :class="`font-weight-bold ${this.getRatioClass}`">
-                   {{ this.getConsProdRatio() }} fois
-                  </span> la production
-                  </p>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+        <v-col cols="12" sm="6" md="4">
+          <v-card class="fill-height">
+            <v-card-subtitle class="text-overline pb-0">Production {{ year }}</v-card-subtitle>
+            <v-card-title class="pt-0">
+              <animated-number :value="total" :formatValue="getFormattedTotal"
+                               :duration="1000"></animated-number>
+              <p class="mb-0 ml-1">GWh</p>
+            </v-card-title>
+            <v-card-text>
+              <p class="mb-0">
+                Dont <span class="font-weight-bold">{{ getTopPercentage().quantity }} GWh</span> d'énergie
+                {{ getTopPercentage().name }}. <br> Soit
+                <span class="font-weight-bold primary--text">{{ getTopPercentage().percent }} %</span>
+                du total de la région
+              </p>
+            </v-card-text>
+          </v-card>
         </v-col>
 
-        <v-col cols="12" md="6" sm="8">
+        <v-col cols="12" sm="6" md="4">
+          <v-card class="fill-height">
+            <v-card-subtitle class="text-overline pb-0">Consommation {{ year }}</v-card-subtitle>
+            <v-card-title class="pt-0">
+              <animated-number :value="consData['consoNette']" :formatValue="getFormattedTotal"
+                               :duration="1000"></animated-number>
+              <p class="mb-0 ml-1">GWh</p>
+            </v-card-title>
+            <v-card-text>
+              <p class="mb-0">
+                Soit
+                <span :class="`font-weight-bold ${this.getRatioClass}`">
+                   {{ this.getConsProdRatio() }} fois
+                  </span> la production
+              </p>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="4">
+          <v-card class="fill-height" v-if="emissions">
+            <v-card-subtitle class="text-overline pb-0">
+              Taux de CO2 {{ year }}
+              <v-tooltip top>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-bind="attrs" v-on="on">mdi-information-outline</v-icon>
+                </template>
+                <span>
+                  Taux d'émissions de CO2, France <br>
+                  Exprimé en grammes par kWh d'électricité produite, réf.:
+                  <ul>
+                    <li>0,986 t CO2 eq /MWh pour les groupes charbon</li>
+                    <li>0,777 t CO2 eq /MWh pour les groupes fioul</li>
+                  </ul>
+                </span>
+              </v-tooltip>
+            </v-card-subtitle>
+            <v-card-title class="pt-0">
+              <animated-number :value="emissions['mean']" :formatValue="getFormattedTotal"
+                               :duration="1000"></animated-number>
+              <p class="mb-0 ml-1">g <small>CO2 / kWh</small></p> <span class="caption ml-2">(moyenne)</span>
+            </v-card-title>
+            <v-card-text>
+              <p class="mb-0">max:
+                <animated-number :value="emissions['max']" :formatValue="getFormattedTotal"
+                                 :duration="1000" class="secondary--text"></animated-number>
+                g <small>CO2 / kWh</small></p>
+
+              <p class="mb-0">min:
+                <animated-number :value="emissions['min']" :formatValue="getFormattedTotal"
+                                 :duration="1000" class="primary--text"></animated-number>
+                g <small>CO2 / kWh</small></p>
+
+            </v-card-text>
+          </v-card>
+          <v-card v-else class="fill-height">
+            <v-card-subtitle class="text-overline pb-0">
+              Taux de CO2 {{ year }}
+            </v-card-subtitle>
+            <v-card-title class="error--text pt-0">
+              N/A
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon v-bind="attrs" v-on="on" color="error" class="ml-3">mdi-information-outline</v-icon>
+                </template>
+                <span>
+                  Les donnees sur l'émission de C02 couvrent uniquement la période 2012-2019
+                </span>
+              </v-tooltip>
+            </v-card-title>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" md="6">
 
           <v-card class="fill-height">
             <v-card-title>Production / consommation</v-card-title>
@@ -93,10 +142,8 @@
           </v-card>
 
         </v-col>
-
         <v-col cols="12" md="6">
           <v-card class="fill-height">
-            <v-card-title class="pb-0">Production par filière</v-card-title>
             <v-tabs v-model="tab">
               <v-tab>
                 <v-icon>mdi-chart-donut</v-icon>
@@ -133,8 +180,10 @@
           </v-card>
 
         </v-col>
+      </v-row>
 
-        <v-col cols="12" md="6">
+      <v-row>
+        <v-col cols="12">
           <DataTable :headers="headers" :table-data="getTableData"></DataTable>
         </v-col>
       </v-row>
@@ -182,13 +231,15 @@ export default {
     loading: false,
     prodData: null,
     consData: null,
+    emissions: null,
     model: 1,
     pieOptions: {
       responsive: true,
       maintainAspectRatio: false,
       legend: {
+        position: 'left',
         labels: {
-          boxWidth: 15
+          boxWidth: 15,
         }
       },
       tooltips: {
@@ -313,33 +364,35 @@ export default {
   },
   methods: {
     async fetchData() {
-      const baseUrl = 'https://opendata-visual.herokuapp.com/api'
       this.loading = true
-      try {
-        const responses = await Promise.all([
-          fetch(`${baseUrl}/production/${this.year}`),
-          fetch(`${baseUrl}/consumption/${this.year}`),
-        ])
+      const baseUrl = this.$store.state.baseUrl
+      const promises = [
+        fetch(`${baseUrl}/production/${this.year}`),
+        fetch(`${baseUrl}/consumption/${this.year}`),
+      ]
+      if (this.year >= 2012) promises.push(fetch(`${baseUrl}/emission/${this.year}`))
 
-        // Wait until all promises are resolved and build an array of objects
-        const data = await Promise.all(
-            responses.map(async (res) => res.json())
-        );
+      try {
+        const responses = await Promise.all(promises)
+        const data = await Promise.all(responses.map(async (res) => res.json()));
         // Let the setter do its thing
         this.setData(data)
 
       } catch (err) {
         console.error(err)
         this.error = err
+
+      } finally {
+        this.loading = false
       }
     },
     setData(data) {
       /**
        * Setter to do various things with no specific logic. To be revisited.
        */
-      this.loading = false
       this.prodData = data[0][this.region]
       this.consData = data[1][this.region]
+      this.emissions = data[2]
 
       let quotas = this.sources.map((source) => this.prodData[source] ?? 0);
 

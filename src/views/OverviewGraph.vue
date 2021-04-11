@@ -180,7 +180,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const baseUrl = 'https://opendata-visual.herokuapp.com/api'
+      const baseUrl = this.$store.state.baseUrl
       const regionId = this.regions.indexOf(this.region)
 
       this.loading = true
