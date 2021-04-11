@@ -144,14 +144,8 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-card class="fill-height">
-            <v-tabs v-model="tab">
-              <v-tab>
-                <v-icon>mdi-chart-donut</v-icon>
-              </v-tab>
-              <v-tab>
-                <v-icon>mdi-chart-bar</v-icon>
-              </v-tab>
-            </v-tabs>
+            <v-card-title class="pb-0">Production par filière
+            </v-card-title>
             <v-card-text>
               <v-tabs-items v-model="tab">
                 <v-tab-item>
@@ -177,6 +171,16 @@
                 </v-tab-item>
               </v-tabs-items>
             </v-card-text>
+            <v-card-actions>
+              <v-tabs v-model="tab">
+                <v-tab>
+                  <v-icon>mdi-chart-donut</v-icon>
+                </v-tab>
+                <v-tab>
+                  <v-icon>mdi-chart-bar</v-icon>
+                </v-tab>
+              </v-tabs>
+            </v-card-actions>
           </v-card>
 
         </v-col>
