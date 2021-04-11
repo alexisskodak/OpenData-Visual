@@ -33,6 +33,18 @@
             </a>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-icon>
+              mdi-link
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <a href="https://opendata.reseaux-energies.fr/explore/dataset/eco2mix-national-cons-def/information/?disjunctive.nature">
+              Données éCO2mix nationales
+            </a>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-card-text>
   </v-card>

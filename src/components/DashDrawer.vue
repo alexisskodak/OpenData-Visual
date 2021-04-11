@@ -58,12 +58,10 @@ export default {
     updateRegion: function (reg) {
       this.region = reg
       this.updatePathParams(this.$router, { region: this.region });
-      this.$store.commit('updateRegion', reg)
     },
     updateYear: function (y) {
       this.year = y
       this.updatePathParams(this.$router, { year: this.year });
-      this.$store.commit('updateYear', y)
     },
   },
   watch: {

@@ -4,6 +4,7 @@ import Home from '@/views/Home'
 import Dashboard from "@/views/Dashboard";
 import KeyFigures from "@/views/KeyFigures";
 import OverviewGraph from "@/views/OverviewGraph";
+import Eco2mix from "@/views/Eco2mix";
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,11 @@ const routes = [
         name: 'Overview',
         component: OverviewGraph
       },
+      {
+        path: 'emissions/',
+        name: 'Emissions',
+        component: Eco2mix
+      }
     ]
   },
 ]

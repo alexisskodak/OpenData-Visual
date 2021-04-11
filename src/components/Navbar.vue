@@ -20,6 +20,7 @@
 
         <v-tab :to="{ name: 'Yearly', params: {year: storedYear, region: storedRegion} }" dark>Chiffres clés</v-tab>
         <v-tab :to="{ name: 'Overview', params: {region: storedRegion} }" dark>Vue d'ensemble</v-tab>
+        <v-tab :to="{ name: 'Emissions'}">Données Eco2mix</v-tab>
 
       </v-tabs>
     </template>
