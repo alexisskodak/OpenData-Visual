@@ -22,9 +22,11 @@ export default {
   }),
   methods: {
     updateRegion: function (reg) {
+      this.$store.commit('updateRegion', reg)
       this.region = reg
     },
     updateYear: function (y) {
+      this.$store.commit('updateYear', y)
       this.year = y
     },
   },
