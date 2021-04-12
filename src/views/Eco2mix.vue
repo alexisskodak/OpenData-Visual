@@ -1,6 +1,17 @@
 <template>
   <v-main app v-if="loading">
     <v-container>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-skeleton-loader type="list-item-two-line"></v-skeleton-loader>
+          <v-skeleton-loader type="list-item"></v-skeleton-loader>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="12">
+          <v-skeleton-loader type="table-heading, image" elevation="2"></v-skeleton-loader>
+        </v-col>
+      </v-row>
     </v-container>
   </v-main>
 
@@ -8,13 +19,16 @@
     <v-container>
       <v-row>
         <v-col>
-          <p class="text-h5 mb-0">Emissions de CO2 par kWh produit en France</p>
-          <p class="body-2">Période 2012 - 2019</p>
-          <p class="subtitle-1">en grammes par kWh</p>
+          <p class="text-h5 mb-0">Emissions de CO2 liées à la production d'électricité</p>
+          <p class="body-2">Période 2012 - 2019 (Echelle nationale)</p>
           <v-card>
-            <v-card-title></v-card-title>
+            <v-card-title>Evolution du taux de C02 (g / kWh)</v-card-title>
+            <v-card-subtitle>
+              <v-checkbox v-model="displayExtremes" color="primary" label="Afficher taux min. et max."></v-checkbox>
+            </v-card-subtitle>
             <v-card-text>
               <LineChart
+                  :display-extremes="displayExtremes"
                   :dates="dates"
                   :sums="sums"
                   :maxs="maxs"
@@ -38,6 +52,7 @@ export default {
   components: {LineChart},
   data: () => ({
     loading: false,
+    displayExtremes: false,
     dates: [],
     sums: [],
     means: [],
@@ -66,6 +81,30 @@ export default {
             color: "rgba(87, 87, 87, 0.3)"
           },
         }]
+      },
+      legend: {
+        labels: {
+          boxWidth: 15
+        }
+      },
+      tooltips: {
+        callbacks: {
+          title: function () {
+            return `Taux en g / kWh`;
+          },
+        }
+      },
+      plugins: {
+        zoom: {
+          zoom: {
+            enabled: true,
+            drag: {
+              animationDuration: 1000
+            },
+            mode: 'x',
+            speed: 0.05
+          }
+        }
       }
     },
   }),
@@ -90,7 +129,7 @@ export default {
         return v.sum
       })
       this.means = values.map(v => {
-        return v.mean
+        return v.mean.toPrecision(2)
       })
       this.maxs = values.map(v => {
         return v.max

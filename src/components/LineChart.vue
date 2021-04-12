@@ -23,36 +23,52 @@ export default {
     options: {
       type: Object
     },
+    displayExtremes: {
+      type: Boolean
+    }
   },
   methods: {
     renderLineChart: function () {
-      this.renderChart({
+      let chartData = {
         labels: this.dates,
         datasets: [
           {
-            data: this.mins,
-            label: "Min",
-            backgroundColor: 'rgb(207,244,85,0.3)',
-            borderColor: 'rgb(207,244,85)'
-          },
-          {
-            data: this.maxs,
-            label: "Max",
-            backgroundColor: 'rgb(244,135,85,0.3)',
-            borderColor: 'rgb(244,135,85)'
-          },
-          {
             data: this.means,
-            label: "Moyenne",
+            label: "Taux moyen",
             backgroundColor: 'rgb(85,218,244, 0.3)',
             borderColor: 'rgb(85,218,244)'
           }
         ]
-      }, this.options)
+      }
+      let mins = {
+        data: this.mins,
+        label: "Taux min.",
+        backgroundColor: 'rgb(207,244,85,0.3)',
+        borderColor: 'rgb(207,244,85)'
+      }
+      let maxs = {
+        data: this.maxs,
+        label: "Taux max",
+        backgroundColor: 'rgb(244,135,85,0.3)',
+        borderColor: 'rgb(244,135,85)'
+      }
+      if (this.displayExtremes) {
+        chartData.datasets.push(mins)
+        chartData.datasets.push(maxs)
+      }
+      this.renderChart(chartData, this.options)
     }
   },
   mounted() {
+    this.addPlugin({
+      id: "zoom"
+    })
     this.renderLineChart()
+  },
+  watch: {
+    displayExtremes: function () {
+      this.renderLineChart()
+    }
   }
 }
 </script>
