@@ -26,8 +26,7 @@
           <p class="body-2">Période 2008 - 2019</p>
           <v-card>
             <v-card-title>
-              Evolution <span class="primary--text mx-2">production</span> / <span
-                class="secondary--text mx-2">conso.</span>
+              Evolution production / conso.
             </v-card-title>
             <v-card-subtitle>
               <v-switch :label="`Échelle: ${scale.name}`" class="mt-0" v-model="scaleSwitch"></v-switch>
@@ -78,7 +77,9 @@ export default {
     axes: {name: 'simple', options: null, ids: [null, null]},
     lineOptions: {
       legend: {
-        display: false
+        labels: {
+          boxWidth: 15
+        }
       },
       responsive: true,
       maintainAspectRatio: false,
@@ -106,7 +107,7 @@ export default {
             color: "rgba(87, 87, 87, 0.3)"
           },
         }]
-      }
+      },
     },
   }),
   mounted() {

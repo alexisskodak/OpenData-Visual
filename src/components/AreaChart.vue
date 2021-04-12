@@ -27,6 +27,7 @@ export default {
             labels: this.labels,
             datasets: [
               {
+                label: "Production",
                 data: this.chartData.histProdData,
                 //backgroundColor: "#80b3db",
                 backgroundColor: "rgb(128,179,219, 0.3)",
@@ -35,6 +36,7 @@ export default {
                 yAxisID: this.axesOptions.ids[0] ?? null
               },
               {
+                label: "Consommation",
                 data: this.chartData.histConsData,
                 backgroundColor: "rgba(0,0,0,0)",
                 fill: {value: 2},
