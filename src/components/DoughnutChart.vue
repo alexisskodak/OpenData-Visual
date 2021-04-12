@@ -11,6 +11,12 @@ export default {
     regionData: {
       type: Array,
     },
+    nationalData: {
+      type: Array
+    },
+    displayNationalData: {
+      type: Boolean
+    },
     percentages: {
       type: Array
     },
@@ -23,23 +29,43 @@ export default {
   },
   methods: {
     renderDonutChart: function () {
-      this.renderChart({
-            labels: this.labels,
-            datasets: [{
-              data: this.regionData,
-              borderWidth: 0,
-              backgroundColor: [
-                this.colors[0],
-                this.colors[1],
-                this.colors[2],
-                this.colors[3],
-                this.colors[4],
-                this.colors[5],
-              ]
-            }]
+      let national = {
+        label: "national",
+        data: this.nationalData,
+        //borderWidth: 0,
+        //weight: 0.75,
+        backgroundColor: [
+          this.colors[0],
+          this.colors[1],
+          this.colors[2],
+          this.colors[3],
+          this.colors[4],
+          this.colors[5],
+        ]
+      }
+      let chartData = {
+        labels: this.labels,
+        datasets: [
+          {
+            label: "regional",
+            data: this.regionData,
+            //borderWidth: 0,
+            //weight: 0.75,
+            backgroundColor: [
+              this.colors[0],
+              this.colors[1],
+              this.colors[2],
+              this.colors[3],
+              this.colors[4],
+              this.colors[5],
+            ]
           },
-          this.options
-      );
+        ]
+      }
+      if (this.displayNationalData) {
+        chartData.datasets.push(national)
+      }
+      this.renderChart(chartData, this.options);
     }
   },
   mounted() {
@@ -51,6 +77,10 @@ export default {
       this.renderDonutChart()
     },
     colors: function () {
+      this.$data._chart.destroy()
+      this.renderDonutChart()
+    },
+    displayNationalData: function () {
       this.$data._chart.destroy()
       this.renderDonutChart()
     }

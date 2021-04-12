@@ -9,7 +9,13 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="4">
+          <v-skeleton-loader type="table-heading, article" elevation="2"></v-skeleton-loader>
+        </v-col>
+        <v-col cols="12" md="4">
+          <v-skeleton-loader type="table-heading, article" elevation="2"></v-skeleton-loader>
+        </v-col>
+        <v-col cols="12" md="4">
           <v-skeleton-loader type="table-heading, article" elevation="2"></v-skeleton-loader>
         </v-col>
         <v-col cols="12" md="6">
@@ -30,48 +36,51 @@
     <v-container v-if="prodData">
       <p class="text-h5 mb-0">Données régionales d'énergie</p>
       <p class="body-2">Région {{ region }}, {{ year }}</p>
+      <v-checkbox v-model="display" color="primary" label="Afficher comparatif échelle nationale"></v-checkbox>
 
       <v-row>
 
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" :md="display ? 3 : 4">
           <v-card class="fill-height">
-            <v-card-subtitle class="text-overline pb-0">Production {{ year }}</v-card-subtitle>
+            <v-card-subtitle class="text-overline pb-0">Prod. régionale {{ year }}</v-card-subtitle>
             <v-card-title class="pt-0">
-              <animated-number :value="total" :formatValue="getFormattedTotal"
+              <animated-number :value="totalProdRegional" :formatValue="getFormattedTotal"
                                :duration="1000"></animated-number>
               <p class="mb-0 ml-1">GWh</p>
             </v-card-title>
             <v-card-text>
-              <p class="mb-0">
-                Dont <span class="font-weight-bold">{{ getTopPercentage().quantity }} GWh</span> d'énergie
-                {{ getTopPercentage().name }}. <br> Soit
-                <span class="font-weight-bold primary--text">{{ getTopPercentage().percent }} %</span>
-                du total de la région
-              </p>
+              Dont <span class="font-weight-bold">{{ getTopPercentage().percent }} %</span> d'énergie
+              {{ getTopPercentage().name }}.
+            </v-card-text>
+            <v-divider v-if="display"></v-divider>
+            <v-card-text v-if="display">
+              <span class="font-weight-bold">{{ getRegionRatio }} %</span> de la production nationale
             </v-card-text>
           </v-card>
         </v-col>
 
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" :md="display ? 3 : 4">
           <v-card class="fill-height">
-            <v-card-subtitle class="text-overline pb-0">Consommation {{ year }}</v-card-subtitle>
+            <v-card-subtitle class="text-overline pb-0">Conso. régionale {{ year }}</v-card-subtitle>
             <v-card-title class="pt-0">
               <animated-number :value="consData['consoNette']" :formatValue="getFormattedTotal"
                                :duration="1000"></animated-number>
               <p class="mb-0 ml-1">GWh</p>
             </v-card-title>
             <v-card-text>
-              <p class="mb-0">
-                Soit
-                <span :class="`font-weight-bold ${this.getRatioClass}`">
-                   {{ this.getConsProdRatio() }} fois
-                  </span> la production
-              </p>
+              Soit
+              <span class="font-weight-bold">
+                   {{ this.getConsProdRatio() }}x
+                  </span> la prod. totale de la région
+            </v-card-text>
+            <v-divider v-if="display"></v-divider>
+            <v-card-text v-if="display">
+              <span class="font-weight-bold">{{ getConsRegionRatio }} %</span> de la conso. nationale
             </v-card-text>
           </v-card>
         </v-col>
 
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="6" :md="display ? 3 : 4">
           <v-card class="fill-height" v-if="emissions">
             <v-card-subtitle class="text-overline pb-0">
               Taux de CO2 {{ year }}
@@ -97,12 +106,12 @@
             <v-card-text>
               <p class="mb-0">max:
                 <animated-number :value="emissions['max']" :formatValue="getFormattedTotal"
-                                 :duration="1000" class="secondary--text"></animated-number>
+                                 class="font-weight-bold" :duration="1000"></animated-number>
                 g <small>CO2 / kWh</small></p>
 
               <p class="mb-0">min:
                 <animated-number :value="emissions['min']" :formatValue="getFormattedTotal"
-                                 :duration="1000" class="primary--text"></animated-number>
+                                 class="font-weight-bold" :duration="1000"></animated-number>
                 g <small>CO2 / kWh</small></p>
 
             </v-card-text>
@@ -121,6 +130,24 @@
                   Les donnees sur l'émission de C02 couvrent uniquement la période 2012-2019
                 </span>
               </v-tooltip>
+            </v-card-title>
+          </v-card>
+        </v-col>
+
+        <v-col v-if="display" cols="12" sm="6" md="3">
+          <v-card class="fill-height">
+            <v-card-subtitle class="text-overline pb-0">
+              Total prod. nationale {{ year }}
+            </v-card-subtitle>
+            <v-card-title class="py-0">
+              {{ totalProdNational.toLocaleString('fr') }} GWh
+            </v-card-title>
+            <v-divider class="my-3"></v-divider>
+            <v-card-subtitle class="text-overline py-0">
+              Total conso. nationale {{ year }}
+            </v-card-subtitle>
+            <v-card-title class="pt-0">
+              {{ totalConsNational.toLocaleString('fr') }} GWh
             </v-card-title>
           </v-card>
         </v-col>
@@ -144,7 +171,7 @@
         </v-col>
         <v-col cols="12" md="6">
           <v-card class="fill-height">
-            <v-card-title class="pb-0">Production par filière
+            <v-card-title>Production par filière
             </v-card-title>
             <v-card-text>
               <v-tabs-items v-model="tab">
@@ -154,6 +181,8 @@
                       :labels="labels"
                       :colors="getChartColors"
                       :region-data="quantities"
+                      :national-data="nationalProdQuantities"
+                      :display-national-data="display"
                       :percentages="getPercentages"
                       :options="chartOptions">
                   </DoughnutChart>
@@ -222,6 +251,7 @@ export default {
   },
   data: () => ({
     tab: null,
+    display: false,
     sources: ['Nucleaire', 'Eolienne', 'Thermique', 'Hydraulique', 'Solaire', 'Bioenergies'],
     headers: [
       {text: 'Source', value: 'name', sortable: false, align: 'start'},
@@ -231,7 +261,10 @@ export default {
     labels: [],
     quantities: [],
     chartData: {},
-    total: 0,
+    totalProdRegional: 0,
+    nationalProdQuantities: [],
+    totalProdNational: 0,
+    totalConsNational: 0,
     loading: false,
     prodData: null,
     consData: null,
@@ -293,7 +326,7 @@ export default {
     chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
-      cutoutPercentage: 70,
+      cutoutPercentage: 65,
       animation: {
         animateScale: true
       },
@@ -304,16 +337,18 @@ export default {
         }
       },
       tooltips: {
+        mode: 'index',
         callbacks: {
-          title: function () {
-            return `Quantite en GWh`;
+          label: function (tooltipItem, data) {
+            /**
+             * Dont ask me to explain this, it works.
+             */
+            return data.labels[tooltipItem.index]
+                + ' '
+                + data.datasets[tooltipItem.datasetIndex].label
+                + ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toFixed(1)
+                + ' GWh';
           },
-          afterLabel: function (tooltipItem, data) {
-            let dataset = data['datasets'][0]['data']
-            let total = dataset.reduce((a, b) => a + b)
-            let percent = dataset.map((a) => (a / total * 100).toFixed(0))
-            return `Soit ${percent[tooltipItem['index']]} %`
-          }
         }
       }
     }
@@ -330,23 +365,38 @@ export default {
       return this.$vuetify.theme.dark ? darkPalete : lightPalette
     },
     getPieData: function () {
-      return [this.total.toFixed(2), (this.consData['consoNette']).toFixed(2)]
-    },
-    getRatioClass: function () {
-      /**
-       * Used to visually indicate Consumption / Production Ratios.
-       */
-      return parseFloat(this.getConsProdRatio()) >= 1.0 ? 'red--text' : 'green--text'
+      return [this.totalProdRegional.toFixed(2), (this.consData['consoNette'])
+          .toFixed(2)]
     },
     getPercentages: function () {
-      return this.quantities.map((x) => (x / this.total * 100).toFixed(2))
+      return this.quantities.map((x) => (x / this.totalProdRegional * 100)
+          .toFixed(2))
     },
     getTableData: function () {
       return this.sources.map((n) => ({
         'name': n, 'quantity': this.prodData[n] ?? 0,
-        'percent': (this.prodData[n] / this.total * 100).toFixed(2)
+        'percent': (this.prodData[n] / this.totalProdRegional * 100)
+            .toFixed(2)
       }))
-    }
+    },
+    getRegionRatio: function () {
+      /**
+       * Regional / National production ratio is used for 'key figures' section.
+       * A good indicator to evaluate a region's energetic self-sufficiency
+       */
+      return parseFloat((this.totalProdRegional / this.totalProdNational * 100)
+          .toPrecision(2))
+          .toLocaleString('fr')
+    },
+    getConsRegionRatio: function () {
+      /**
+       * Regional / National consumption ratio is used for 'key figures' section.
+       * A good indicator to evaluate a region's energetic self-sufficiency
+       */
+      return parseFloat((this.consData['consoNette'] / this.totalConsNational * 100)
+          .toPrecision(2))
+          .toLocaleString('fr')
+    },
   },
   watch: {
     /**
@@ -380,7 +430,8 @@ export default {
         const responses = await Promise.all(promises)
         const data = await Promise.all(responses.map(async (res) => res.json()));
         // Let the setter do its thing
-        this.setData(data)
+        this.setRegionalData(data)
+        this.setNationalData(data)
 
       } catch (err) {
         console.error(err)
@@ -390,7 +441,7 @@ export default {
         this.loading = false
       }
     },
-    setData(data) {
+    setRegionalData: function (data) {
       /**
        * Setter to do various things with no specific logic. To be revisited.
        */
@@ -406,23 +457,56 @@ export default {
 
       const chartDataObject = Object.fromEntries(Object.entries(this.chartData))
 
-      this.total = quotas.reduce((a, b) => a + b)
+      this.totalProdRegional = quotas.reduce((a, b) => a + b)
       this.quantities = Object.values(chartDataObject)
       this.labels = Object.keys(chartDataObject)
+    },
+    setNationalData: function (data) {
+
+      let prod = Object.values(data[0])
+      prod.forEach(t => {
+        delete t["annee"];
+        delete t["codeInsee"]
+      })
+      let totals = []
+      // For each Energy source, reduce the array of regionally produced amounts to get a grand total
+      for (let source of this.sources) {
+        let totalPerSource = prod.reduce((acc, item) => {
+          return acc + item[source]
+        }, 0)
+        totals.push(totalPerSource)
+      }
+
+      this.nationalProdQuantities = totals
+      this.totalProdNational = totals.reduce((a, b) => {
+        return a + b
+      })
+
+      let cons = Object.values(data[1])
+      cons.forEach(t => {
+        delete t["annee"];
+        delete t["codeInsee"]
+      })
+      this.totalConsNational = cons.reduce((acc, item) => {
+        return acc + item["consoNette"]
+      }, 0)
     },
     getFormattedTotal: function (value) {
       /**
        * FormattedTotal is used for 'key figures' section.
        * Required to format an 'Animated Number'
        */
-      return `${parseFloat(Number(value).toFixed(0)).toLocaleString('fr')}`
+      return `${parseFloat(Number(value).toFixed(0))
+          .toLocaleString('fr')}`
     },
     getConsProdRatio: function () {
       /**
        * Consumption / Production ratio is used for 'key figures' section.
        * A good indicator to evaluate a region's energetic self-sufficiency
        */
-      return parseFloat((this.consData['consoNette'] / this.total).toPrecision(2)).toLocaleString('fr')
+      return parseFloat((this.consData['consoNette'] / this.totalProdRegional)
+          .toPrecision(2))
+          .toLocaleString('fr')
     },
     getTopPercentage() {
       /**
