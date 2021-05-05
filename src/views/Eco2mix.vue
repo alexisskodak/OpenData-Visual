@@ -40,6 +40,12 @@
           </v-card>
         </v-col>
       </v-row>
+
+      <v-row>
+        <v-col>
+          <Footer></Footer>
+        </v-col>
+      </v-row>
     </v-container>
   </v-main>
 </template>
