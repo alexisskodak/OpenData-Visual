@@ -52,10 +52,11 @@
 
 <script>
 import LineChart from "@/components/LineChart";
+import Footer from "../components/Footer";
 
 export default {
   name: "Eco2mix",
-  components: {LineChart},
+  components: {Footer, LineChart},
   data: () => ({
     loading: false,
     displayExtremes: false,
